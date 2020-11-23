@@ -24,21 +24,62 @@ namespace Revisione
             return fileInfoList;
         }
 
-        public static List<FileInfo> trovoRevisioniRecenti(List<FileInfo> listaOld, List<FileInfo> listaNew)
+        public static List<FileInfo> getMostUpdated(List<FileInfo> list) 
         {
-            List<FileInfo> results = new List<FileInfo>();
+            IDictionary<string, List<FileInfo>> tmpDict = new Dictionary<string, List<FileInfo>>();
 
-            List<string> listaOldName = (List<string>)listaOld.Select(x => x.Name);
-
-            foreach (FileInfo f in listaNew) 
+            foreach (FileInfo fi in list)
             {
-                string nameNew = f.Name;
+                string name = fi.Name;
 
-                if (listaOldName.Contains(nameNew))
+                if (!tmpDict.ContainsKey(name))
                 {
-                    Console.WriteLine(nameNew);
+                    tmpDict.Add(name, new List<FileInfo>());
+                }
+
+                tmpDict[name].Add(fi);
+            }
+
+            List<FileInfo> fileRecenti = new List<FileInfo>();
+
+            foreach (var x in tmpDict)
+            {
+                if(x.Value.Count > 1)
+                {
+                    FileInfo fUpdated = x.Value.OrderBy(y => y.LastWriteTime).ToList().Last();
+                    fileRecenti.Add(fUpdated);
+                }
+                else
+                {
+                    fileRecenti.Add(x.Value.First());
                 }
             }
+
+            return fileRecenti;
+;
+        }
+
+        public static List<FileInfo> trovoRevisioniRecenti(List<FileInfo> listaOld, List<FileInfo> listaNew)
+        {
+            // ? PER OGNI FILE CON LO STESSO NOME PRENDERE IL PIU RECENTE
+            listaNew = getMostUpdated(listaNew);
+            listaOld = getMostUpdated(listaOld);
+
+            List<FileInfo> results = new List<FileInfo>();
+
+            //List<FileInfo> listaOldName = listaOld.OrderBy(x => x.LastWriteTime).GroupBy(x => x.Name);
+            //listaOldName = (List<string>)listaOld.GroupBy(x => x.Name).ToList();
+            //listaOldName = (List<string>)listaOld.Select(x => x.Name);
+
+            //foreach (FileInfo f in listaNew) 
+            //{
+            //    string nameNew = f.Name;
+
+            //    if (listaOldName.Contains(nameNew))
+            //    {
+            //        Console.WriteLine(nameNew);
+            //    }
+            //}
 
             return results;
         }
