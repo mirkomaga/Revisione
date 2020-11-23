@@ -61,27 +61,29 @@ namespace Revisione
 
         public static List<FileInfo> trovoRevisioniRecenti(List<FileInfo> listaOld, List<FileInfo> listaNew)
         {
+            List<FileInfo> fileAggiornati = new List<FileInfo>();
+
             // ? PER OGNI FILE CON LO STESSO NOME PRENDERE IL PIU RECENTE
             listaNew = getMostUpdated(listaNew);
             listaOld = getMostUpdated(listaOld);
 
             List<FileInfo> results = new List<FileInfo>();
 
-            //List<FileInfo> listaOldName = listaOld.OrderBy(x => x.LastWriteTime).GroupBy(x => x.Name);
-            //listaOldName = (List<string>)listaOld.GroupBy(x => x.Name).ToList();
-            //listaOldName = (List<string>)listaOld.Select(x => x.Name);
+            foreach (FileInfo fInfoNew in listaNew)
+            {
+                FileInfo fInfoOld = listaOld.Find(x => x.Name == fInfoNew.Name);
 
-            //foreach (FileInfo f in listaNew) 
-            //{
-            //    string nameNew = f.Name;
+                if(fInfoOld != null)
+                {
+                    if (fInfoOld.LastWriteTime < fInfoNew.LastWriteTime)
+                    {
+                        // ? IL FILE E' STATO AGGIORNATO
+                        fileAggiornati.Add(fInfoNew);
+                    }
+                }
+            }
 
-            //    if (listaOldName.Contains(nameNew))
-            //    {
-            //        Console.WriteLine(nameNew);
-            //    }
-            //}
-
-            return results;
+            return fileAggiornati;
+            }
         }
     }
-}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +16,7 @@ namespace Revisione
         static void Main()
         {
 
-            Controller.trovoRevisioniRecenti(Controller.getFolderFile(@"C:\Users\edgesuser\Desktop\testOld"), Controller.getFolderFile(@"C:\Users\edgesuser\Desktop\testNew"));
+            List<FileInfo> fileAggiornati = Controller.trovoRevisioniRecenti(Controller.getFolderFile(@"C:\Users\edgesuser\Desktop\testOld"), Controller.getFolderFile(@"C:\Users\edgesuser\Desktop\testNew"));
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
